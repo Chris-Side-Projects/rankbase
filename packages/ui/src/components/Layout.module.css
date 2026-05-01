@@ -1,0 +1,13 @@
+.main {
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 1.5rem var(--page-gutter) 4rem;
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-subtle);
+  font-size: 0.8rem;
+}

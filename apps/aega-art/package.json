@@ -1,0 +1,13 @@
+{
+  "name": "@rankbase/aega-art",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "tsc && npm --prefix client run build",
+    "dev": "concurrently \"tsc --watch\" \"vite --config client/vite.config.ts\"",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@rankbase/core": "workspace:*"
+  }
+}

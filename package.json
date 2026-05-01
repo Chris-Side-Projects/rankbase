@@ -1,0 +1,16 @@
+{
+  "name": "rankbase",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Monorepo for AI image ranking platforms",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "dev:aega": "pnpm --filter @rankbase/aega-art dev",
+    "dev:imgrank": "pnpm --filter @rankbase/imgrank dev",
+    "lint": "pnpm -r run lint"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}

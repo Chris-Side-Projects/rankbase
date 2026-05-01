@@ -1,0 +1,222 @@
+.header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  margin: 0;
+}
+
+.header p {
+  color: var(--text-muted);
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+}
+
+.headerActions,
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+}
+
+.section h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.loginShell {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+}
+
+.login {
+  width: min(100%, 360px);
+  display: grid;
+  gap: 0.75rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.login h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.login label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.login input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+}
+
+.login button,
+.imageBody button {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--text-inverse);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.8rem;
+}
+
+.secondaryButton {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.8rem;
+}
+
+.errorBlock {
+  display: grid;
+  justify-items: start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.queue {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.imageCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.imageCard img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--bg-hover);
+}
+
+.missingImage {
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--bg-hover);
+}
+
+.imageBody {
+  padding: 0.85rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.imageMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  color: var(--text-subtle);
+  font-size: 0.75rem;
+}
+
+.imageBody p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.notes {
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem;
+}
+
+.reportActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.imageBody button {
+  justify-self: start;
+}
+
+.imageBody button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.table th {
+  color: var(--text-subtle);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.table td {
+  color: var(--text-muted);
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+.empty {
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .header,
+  .sectionHeader {
+    align-items: stretch;
+  }
+}

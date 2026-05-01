@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Maskable-safe: the 'S' sits inside the inner 80% so OS launchers can
+       crop the outer 10% on each side without clipping the glyph. -->
+  <rect width="512" height="512" rx="96" fill="#6366f1"/>
+  <text x="256" y="356" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif" font-size="288" font-weight="700" text-anchor="middle" fill="#ffffff">S</text>
+</svg>

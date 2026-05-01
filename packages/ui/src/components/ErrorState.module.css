@@ -1,0 +1,50 @@
+.root {
+  background: var(--danger-muted);
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--danger);
+}
+
+.message {
+  color: var(--text);
+  margin: 0 0 0.75rem;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.button {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  transition: opacity var(--transition-fast);
+}
+
+.button:hover {
+  opacity: 0.9;
+}
+
+.requestId {
+  margin-top: 1rem;
+  color: var(--text-subtle);
+  font-size: 0.75rem;
+}
+
+.requestId code {
+  font-family: var(--font-mono);
+}
