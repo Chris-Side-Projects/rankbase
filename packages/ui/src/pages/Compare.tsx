@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
+import { platformConfig } from '../platform.config';
 import { api, ApiError } from '../api/client';
 import type { CompareResponse, Image } from '../types';
 import { useApi } from '../hooks/useApi';
@@ -96,7 +97,7 @@ export function ComparePage() {
   const submitVote = useCallback(
     async (winner: Image, loser: Image) => {
       if (submitting || !deviceHash) return;
-      if (!user) {
+      if (platformConfig.requireAuth && !user) {
         navigate('/login', { state: { from: '/compare' } });
         return;
       }
@@ -228,7 +229,7 @@ export function ComparePage() {
       </div>
 
       <div className={styles.actions}>
-        {!authLoading && !user && (
+        {platformConfig.requireAuth && !authLoading && !user && (
           <p className={styles.authPrompt}>
             <Link to="/login" state={{ from: '/compare' }}>
               Sign in
