@@ -1,55 +1,76 @@
 /**
  * AuthCallback.tsx
  *
- * Landing page for OAuth redirects (Google, magic link, etc).
- *
- * Supabase puts tokens in the URL hash after OAuth. The JS SDK's
- * `onAuthStateChange` detects the hash fragment and establishes the session
- * automatically when the client loads — but only if it gets a chance to run
- * before we navigate away. This page just waits for that to happen, then
- * redirects to wherever the user was going.
+ * Handles both PKCE (?code=) and implicit (#access_token=) OAuth flows.
+ * Explicitly exchanges the code rather than relying on the SDK's auto-detection
+ * timing, which can race with React rendering.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 export function AuthCallbackPage() {
   const navigate = useNavigate();
+  const handled = useRef(false);
 
   useEffect(() => {
-    // supabase-js v2 automatically parses the hash/query params and calls
-    // onAuthStateChange with the new session. We just wait for it.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        subscription.unsubscribe();
-        // Redirect to the stored destination, or home
-        const dest = sessionStorage.getItem('auth_redirect') ?? '/compare';
+    if (handled.current) return;
+    handled.current = true;
+
+    const dest = sessionStorage.getItem('auth_redirect') ?? '/compare';
+
+    async function handle() {
+      const url = new URL(window.location.href);
+
+      // PKCE flow: ?code= query param
+      const code = url.searchParams.get('code');
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          console.error('OAuth exchange failed:', error.message);
+          navigate('/login?error=oauth_failed', { replace: true });
+          return;
+        }
         sessionStorage.removeItem('auth_redirect');
         navigate(dest, { replace: true });
+        return;
       }
-    });
 
-    // Fallback: if already signed in (session already loaded), redirect immediately
-    supabase.auth.getSession().then(({ data: { session } }) => {
+      // Implicit flow: #access_token= hash fragment
+      const hash = url.hash;
+      if (hash && hash.includes('access_token')) {
+        // SDK handles hash automatically — just wait for the SIGNED_IN event
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === 'SIGNED_IN' && session) {
+            subscription.unsubscribe();
+            sessionStorage.removeItem('auth_redirect');
+            navigate(dest, { replace: true });
+          }
+        });
+        // Also check if session already established
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          subscription.unsubscribe();
+          sessionStorage.removeItem('auth_redirect');
+          navigate(dest, { replace: true });
+        }
+        return;
+      }
+
+      // Already signed in (e.g. magic link already processed)
+      const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        subscription.unsubscribe();
-        const dest = sessionStorage.getItem('auth_redirect') ?? '/compare';
         sessionStorage.removeItem('auth_redirect');
         navigate(dest, { replace: true });
+        return;
       }
-    });
 
-    // Timeout fallback — if nothing happens in 5s, go to login
-    const timeout = setTimeout(() => {
-      subscription.unsubscribe();
+      // Nothing to handle — back to login
       navigate('/login', { replace: true });
-    }, 5000);
+    }
 
-    return () => {
-      subscription.unsubscribe();
-      clearTimeout(timeout);
-    };
+    handle();
   }, [navigate]);
 
   return (
