@@ -51,6 +51,25 @@ importers:
         specifier: ^6.0.2
         version: 6.0.3
 
+  apps/aega-art/client:
+    dependencies:
+      '@rankbase/ui':
+        specifier: workspace:*
+        version: link:../../../packages/ui
+    devDependencies:
+      '@vitejs/plugin-react':
+        specifier: ^4.3.3
+        version: 4.7.0(vite@5.4.21(@types/node@25.6.0)(terser@5.46.2))
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.10
+        version: 5.4.21(@types/node@25.6.0)(terser@5.46.2)
+      vite-plugin-pwa:
+        specifier: ^0.20.5
+        version: 0.20.5(vite@5.4.21(@types/node@25.6.0)(terser@5.46.2))(workbox-build@7.4.0(@types/babel__core@7.20.5))(workbox-window@7.4.0)
+
   apps/imgrank:
     dependencies:
       '@aws-sdk/client-s3':
@@ -93,6 +112,25 @@ importers:
       typescript:
         specifier: ^6.0.2
         version: 6.0.3
+
+  apps/imgrank/client:
+    dependencies:
+      '@rankbase/ui':
+        specifier: workspace:*
+        version: link:../../../packages/ui
+    devDependencies:
+      '@vitejs/plugin-react':
+        specifier: ^4.3.3
+        version: 4.7.0(vite@5.4.21(@types/node@25.6.0)(terser@5.46.2))
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
+      vite:
+        specifier: ^5.4.10
+        version: 5.4.21(@types/node@25.6.0)(terser@5.46.2)
+      vite-plugin-pwa:
+        specifier: ^0.20.5
+        version: 0.20.5(vite@5.4.21(@types/node@25.6.0)(terser@5.46.2))(workbox-build@7.4.0(@types/babel__core@7.20.5))(workbox-window@7.4.0)
 
   packages/core:
     dependencies:

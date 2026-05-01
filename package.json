@@ -4,9 +4,13 @@
   "version": "0.0.1",
   "description": "Monorepo for AI image ranking platforms",
   "scripts": {
-    "build": "pnpm -r run build",
-    "dev:aega": "pnpm --filter @rankbase/aega-art dev",
-    "dev:imgrank": "pnpm --filter @rankbase/imgrank dev",
+    "build": "pnpm --filter @rankbase/core build && pnpm --filter @rankbase/aega-art build && pnpm --filter @rankbase/imgrank build && pnpm --filter @rankbase/aega-art-client build && pnpm --filter @rankbase/imgrank-client build",
+    "build:core": "pnpm --filter @rankbase/core build",
+    "build:aega": "pnpm --filter @rankbase/aega-art build && pnpm --filter @rankbase/aega-art-client build",
+    "build:imgrank": "pnpm --filter @rankbase/imgrank build && pnpm --filter @rankbase/imgrank-client build",
+    "dev:aega": "pnpm --filter @rankbase/aega-art-client dev",
+    "dev:imgrank": "pnpm --filter @rankbase/imgrank-client dev",
+    "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run lint"
   },
   "engines": {
