@@ -1,6 +1,6 @@
 /**
- * Interface that app-specific imageGeneration services must satisfy.
- * Each app (aega-art, imgrank) provides its own implementation.
+ * Interface for app-specific imageGeneration services.
+ * The function signature is flexible — apps may accept opts or prompt string.
  */
 export interface GenerateImageResult {
   id: string;
@@ -10,6 +10,9 @@ export interface GenerateImageResult {
   elo: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type GenerateOneFn = (...args: any[]) => Promise<any>;
+
 export interface ImageGenerationService {
-  generateOneImage(prompt?: string): Promise<GenerateImageResult>;
+  generateOneImage: GenerateOneFn;
 }

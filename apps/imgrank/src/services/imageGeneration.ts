@@ -1,13 +1,13 @@
-import { getRandomPrompt } from '../lib/prompts';
-import { generateWithFal, generateWithFalSchnell } from './fal';
-import { generateWithStability } from './stability';
-import { generateWithDalle, tagImageWithVision } from './openai';
-import { generateWithImagen } from './google';
-import { uploadToCloudflareImages } from './cloudflare';
-import { moderateText } from './moderation';
-import { getSupabase } from './supabase';
-import { AppError, ProviderExhaustedError, ProvidersExhaustedError } from '../lib/errors';
-import { logger } from '../lib/logger';
+import { getRandomPrompt } from '@rankbase/core/lib/prompts';
+import { generateWithFalDev as generateWithFal, generateWithFalSchnell } from '@rankbase/core/services/fal';
+import { generateWithStability } from '@rankbase/core/services/stability';
+import { generateWithDalle, tagImageWithVision } from '@rankbase/core/services/openai';
+import { generateWithImagen } from '@rankbase/core/services/google';
+import { uploadToCloudflareImages } from '@rankbase/core/services/cloudflare';
+import { moderateText } from '@rankbase/core/services/moderation';
+import { getSupabase } from '@rankbase/core/services/supabase';
+import { AppError, ProviderExhaustedError, ProvidersExhaustedError } from '@rankbase/core/lib/errors';
+import { logger } from '@rankbase/core/lib/logger';
 import {
   getNextModel,
   rotationStartingFrom,

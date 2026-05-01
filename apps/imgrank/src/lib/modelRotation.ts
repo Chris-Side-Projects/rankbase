@@ -1,5 +1,5 @@
-import { getRedis } from './redis';
-import { logger } from './logger';
+import { getRedis } from '@rankbase/core/lib/redis';
+import { logger } from '@rankbase/core/lib/logger';
 
 /**
  * Multi-model "merry-go-round" selector.

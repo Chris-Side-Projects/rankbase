@@ -1,6 +1,6 @@
-import { wrapWithBreaker } from '../lib/circuitBreaker';
-import { ProviderExhaustedError, UpstreamError } from '../lib/errors';
-import { fetchWithTimeout } from '../lib/fetchWithTimeout';
+import { wrapWithBreaker } from '@rankbase/core/lib/circuitBreaker';
+import { ProviderExhaustedError, UpstreamError } from '@rankbase/core/lib/errors';
+import { fetchWithTimeout } from '@rankbase/core/lib/fetchWithTimeout';
 import fs from 'fs';
 
 // Load secrets

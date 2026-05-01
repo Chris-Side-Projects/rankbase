@@ -1,7 +1,7 @@
-import { config } from '../config';
-import { ProviderExhaustedError, UpstreamError } from '../lib/errors';
-import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-import { wrapWithBreaker } from '../lib/circuitBreaker';
+import { config } from '@rankbase/core/config';
+import { ProviderExhaustedError, UpstreamError } from '@rankbase/core/lib/errors';
+import { fetchWithTimeout } from '@rankbase/core/lib/fetchWithTimeout';
+import { wrapWithBreaker } from '@rankbase/core/lib/circuitBreaker';
 
 /**
  * Generates an image using Replicate (SDXL).

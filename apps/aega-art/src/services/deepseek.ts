@@ -1,8 +1,8 @@
-import { config } from '../config';
-import { fetchWithTimeout } from '../lib/fetchWithTimeout';
-import { logger } from '../lib/logger';
+import { config } from '@rankbase/core/config';
+import { fetchWithTimeout } from '@rankbase/core/lib/fetchWithTimeout';
+import { logger } from '@rankbase/core/lib/logger';
 import fs from 'fs';
-import { expandPromptWithGemini } from './gemini';
+import { expandPromptWithGemini } from '@rankbase/core/services/gemini';
 
 // Load secrets
 const secrets = JSON.parse(fs.readFileSync('/home/chris/.openclaw/secrets/image-gen.json', 'utf8'));
