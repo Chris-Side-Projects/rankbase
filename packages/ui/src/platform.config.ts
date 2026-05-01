@@ -16,6 +16,8 @@ export interface PlatformConfig {
   requireAuth: boolean;
   /** Whether this platform serves NSFW content */
   nsfw: boolean;
+  /** Other sites in the same SSO ring — session is relayed to all on login */
+  peerSites?: string[];
 }
 
 // Re-exported so apps can import the type easily

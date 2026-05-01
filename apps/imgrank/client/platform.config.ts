@@ -6,4 +6,5 @@ export const platformConfig: PlatformConfig = {
   siteUrl: 'https://imgrank.app',
   requireAuth: false,
   nsfw: false,
+  peerSites: ['https://aega.art'],
 };
