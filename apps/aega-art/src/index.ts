@@ -2,6 +2,17 @@
 import { initSentry } from '@rankbase/core/lib/sentry';
 initSentry();
 
+// Set site config BEFORE importing app — routes read this at request time
+import { setSiteConfig, AEGA_TABLES } from '@rankbase/core/siteConfig';
+setSiteConfig({
+  name: 'aega.art',
+  siteUrl: 'https://aega.art',
+  tables: AEGA_TABLES,
+  requireAuth: true,
+  nsfw: true,
+  peerSites: ['https://imgrank.app'],
+});
+
 import app from '@rankbase/core/app';
 import { config } from '@rankbase/core/config';
 import { logger } from '@rankbase/core/lib/logger';
@@ -11,7 +22,6 @@ import { closeQueues } from '@rankbase/core/lib/queue';
 import { registerImageGeneration } from '@rankbase/core/services/imageGenerationRegistry';
 import { generateOneImage } from './services/imageGeneration';
 
-// Register this app's image generation implementation
 registerImageGeneration({ generateOneImage });
 
 const server = app.listen(config.PORT, () => {

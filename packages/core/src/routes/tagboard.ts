@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../services/supabase';
 import { AppError } from '../lib/errors';
@@ -13,7 +14,7 @@ const router: ReturnType<typeof Router> = Router();
 router.get('/', async (_req: Request, res: Response) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('tag_scores')
+    .from(getSiteConfig().tables.tagScoresView)
     .select('*')
     .order('score', { ascending: false })
     .limit(20);

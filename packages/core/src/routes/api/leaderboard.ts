@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../../services/supabase';
@@ -35,7 +36,7 @@ router.get('/', async (req: Request, res: Response) => {
 
   if (period === 'all') {
     const r = await supabase
-      .from('aega_images')
+      .from(getSiteConfig().tables.images)
       .select('*')
       .eq('hidden', false)
       .order('elo', { ascending: false })

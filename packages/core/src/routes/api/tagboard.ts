@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../../services/supabase';
@@ -19,7 +20,7 @@ router.get('/', async (req: Request, res: Response) => {
   // tag_scores_live is a Postgres view that computes scores in real-time
   // from aega_images — no nightly aggregation needed.
   const { data, error } = await supabase
-    .from('tag_scores_live')
+    .from(getSiteConfig().tables.tagScoresView)
     .select('tag, score, image_count')
     .order('score', { ascending: false })
     .range(offset, offset + limit - 1);

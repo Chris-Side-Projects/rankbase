@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../../services/supabase';
 import { internalError } from '../../lib/errors';
@@ -16,7 +17,7 @@ router.get('/top', async (req: Request, res: Response) => {
   
   // First get unused prompts (used_at IS NULL) ordered by votes
   const { data: unusedData, error: unusedError } = await supabase
-    .from('aega_prompt_pool')
+    .from(getSiteConfig().tables.prompts)
     .select('id, text, votes, created_at')
     .is('used_at', null)
     .order('votes', { ascending: false })
@@ -29,7 +30,7 @@ router.get('/top', async (req: Request, res: Response) => {
   if (allPrompts.length < 20) {
     const remaining = 20 - allPrompts.length;
     const { data: usedData, error: usedError } = await supabase
-      .from('aega_prompt_pool')
+      .from(getSiteConfig().tables.prompts)
       .select('id, text, votes, created_at')
       .not('used_at', 'is', null)
       .order('votes', { ascending: false })
@@ -47,7 +48,7 @@ router.get('/top', async (req: Request, res: Response) => {
 router.get('/random', async (req: Request, res: Response) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_prompt_pool')
+    .from(getSiteConfig().tables.prompts)
     .select('id, text, votes, created_at')
     .limit(10);
   
@@ -96,7 +97,7 @@ router.post('/suggest', async (req: Request, res: Response) => {
   
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_prompt_pool')
+    .from(getSiteConfig().tables.prompts)
     .insert({
       text: text.trim(),
       source: 'user'

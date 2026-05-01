@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../../services/supabase';
@@ -46,7 +47,7 @@ router.post(
 
     const supabase = getSupabase();
     const { data: image, error: imageError } = await supabase
-      .from('aega_images')
+      .from(getSiteConfig().tables.images)
       .select('id, hidden')
       .eq('id', id)
       .single();
@@ -64,7 +65,7 @@ router.post(
 
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
     const { count, error: countError } = await supabase
-      .from('aega_image_reports')
+      .from(getSiteConfig().tables.reports)
       .select('id', { count: 'exact', head: true })
       .eq('device_hash', deviceHash)
       .gte('created_at', oneHourAgo);
@@ -82,7 +83,7 @@ router.post(
     }
 
     const { data: report, error: insertError } = await supabase
-      .from('aega_image_reports')
+      .from(getSiteConfig().tables.reports)
       .insert({
         image_id: id,
         reason,
@@ -103,7 +104,7 @@ router.post(
 
     const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     const { data: recentReports, error: recentError } = await supabase
-      .from('aega_image_reports')
+      .from(getSiteConfig().tables.reports)
       .select('device_hash')
       .eq('image_id', id)
       .eq('status', 'open')
@@ -125,7 +126,7 @@ router.post(
 
     if (autoHidden) {
       const { error: hideError } = await supabase
-        .from('aega_images')
+        .from(getSiteConfig().tables.images)
         .update({ hidden: true })
         .eq('id', id);
       if (hideError) {
@@ -159,7 +160,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 
   const supabase = getSupabase();
   const { data: image, error: imageError } = await supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('*')
     .eq('id', id)
     .eq('hidden', false)
@@ -176,7 +177,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
 
   const { data: votes, error: votesError } = await supabase
-    .from('aega_votes')
+    .from(getSiteConfig().tables.votes)
     .select('id, image_a, image_b, winner, created_at')
     .or(`image_a.eq.${id},image_b.eq.${id}`)
     .order('created_at', { ascending: false })

@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../services/supabase';
 import { selectPair } from '../lib/pairSelection';
@@ -21,7 +22,7 @@ router.get('/', async (req: Request, res: Response) => {
   const supabase = getSupabase();
 
   const { data: images, error } = await supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('*')
     .eq('hidden', false)
     .order('votes', { ascending: true })

@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../../services/supabase';
 import { AppError } from '../../lib/errors';
@@ -49,7 +50,7 @@ function providerLabel(provider: string) {
 router.get('/leaderboard', async (_req: Request, res: Response) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('id, url, prompt, tags, elo, votes, created_at, provider')
     .eq('hidden', false)
     .order('elo', { ascending: false })

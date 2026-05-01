@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../../services/supabase';
 import { selectPairExcluding } from '../../lib/pairSelection';
@@ -24,7 +25,7 @@ router.get('/', async (req: Request, res: Response) => {
 
   // Fetch candidate images (most-uncertain first)
   const { data: images, error } = await supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('*')
     .eq('hidden', false)
     .order('votes', { ascending: true })
@@ -45,7 +46,7 @@ router.get('/', async (req: Request, res: Response) => {
   const votedPairKeys: Set<string> = new Set();
   if (deviceHash && pool.length >= 2) {
     const { data: voted } = await supabase
-      .from('aega_votes')
+      .from(getSiteConfig().tables.votes)
       .select('image_a, image_b')
       .eq('device_hash', deviceHash)
       .limit(5000);

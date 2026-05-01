@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../siteConfig';
 import { Router, Request, Response } from 'express';
 import { getSupabase } from '../services/supabase';
 import { internalError, NotFoundError } from '../lib/errors';
@@ -15,7 +16,7 @@ const router: ReturnType<typeof Router> = Router();
 router.get('/current', async (_req: Request, res: Response) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_hourly_images')
+    .from(getSiteConfig().tables.hourlyImages)
     .select(
       'hour_ts, image:image_id (id, url, prompt, tags, elo, votes, provider, description, style_tags, subject_tags, mood_tags)'
     )
@@ -32,7 +33,7 @@ router.get('/current', async (_req: Request, res: Response) => {
 router.get('/history', async (_req: Request, res: Response) => {
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_hourly_images')
+    .from(getSiteConfig().tables.hourlyImages)
     .select('hour_ts, image:image_id (id, url, prompt, tags, elo, votes, provider)')
     .order('hour_ts', { ascending: false })
     .limit(500);

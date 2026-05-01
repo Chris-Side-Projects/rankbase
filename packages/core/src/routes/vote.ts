@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../services/supabase';
@@ -78,7 +79,7 @@ router.post(
     });
     void upsertTasteProfile(sessionId);
     void supabase
-      .from('aega_images')
+      .from(getSiteConfig().tables.images)
       .select('tags, style_tags, subject_tags, mood_tags')
       .eq('id', winnerId)
       .maybeSingle()

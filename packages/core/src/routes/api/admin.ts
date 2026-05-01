@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { cronAuth } from '../../middleware/cronAuth';
@@ -48,7 +49,7 @@ router.get('/reports', async (req: Request, res: Response) => {
 
   const supabase = getSupabase();
   let query = supabase
-    .from('aega_image_reports')
+    .from(getSiteConfig().tables.reports)
     .select(
       `
       id,
@@ -102,7 +103,7 @@ router.post(
 
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('aega_image_reports')
+      .from(getSiteConfig().tables.reports)
       .update({ status, resolved_at: new Date().toISOString() } as any)
       .eq('id', id)
       .select('id, status')
@@ -135,7 +136,7 @@ router.get('/images', async (req: Request, res: Response) => {
 
   const supabase = getSupabase();
   let query = supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('id, url, prompt, tags, elo, votes, created_at, hidden, provider, moderation_score')
     .order('moderation_score', { ascending: false })
     .order('created_at', { ascending: false });
@@ -177,7 +178,7 @@ router.post(
 
     const supabase = getSupabase();
     const { data, error } = await supabase
-      .from('aega_images')
+      .from(getSiteConfig().tables.images)
       .update({ hidden })
       .eq('id', id)
       .select('id, hidden')

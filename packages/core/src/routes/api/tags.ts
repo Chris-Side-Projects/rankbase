@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../../services/supabase';
@@ -26,7 +27,7 @@ router.get('/:tag/images', async (req: Request, res: Response) => {
 
   const supabase = getSupabase();
   const { data, error } = await supabase
-    .from('aega_images')
+    .from(getSiteConfig().tables.images)
     .select('*')
     .eq('hidden', false)
     .contains('tags', [tag])

@@ -1,3 +1,4 @@
+import { getSiteConfig } from '../../siteConfig';
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
 import { getSupabase } from '../../services/supabase';
@@ -58,7 +59,7 @@ router.post(
     const { winnerId, loserId, deviceHash } = req.body as z.infer<typeof VoteSchema>;
 
     const supabase = getSupabase();
-    const { data, error } = await supabase.rpc('cast_vote', {
+    const { data, error } = await supabase.rpc(getSiteConfig().castVoteRpc ?? 'cast_vote', {
       p_winner_id: winnerId,
       p_loser_id: loserId,
       p_device_hash: deviceHash,
@@ -104,7 +105,7 @@ router.post(
 
     // Fetch winning image tags for cooccurrence bumping (best-effort).
     void supabase
-      .from('aega_images')
+      .from(getSiteConfig().tables.images)
       .select('tags, style_tags, subject_tags, mood_tags')
       .eq('id', winnerId)
       .maybeSingle()

@@ -1,6 +1,15 @@
-// Sentry must init before any other code
 import { initSentry } from '@rankbase/core/lib/sentry';
 initSentry();
+
+import { setSiteConfig, IMGRANK_TABLES } from '@rankbase/core/siteConfig';
+setSiteConfig({
+  name: 'imgrank',
+  siteUrl: 'https://imgrank.app',
+  tables: IMGRANK_TABLES,
+  requireAuth: false,
+  nsfw: false,
+  peerSites: ['https://aega.art'],
+});
 
 import app from '@rankbase/core/app';
 import { config } from '@rankbase/core/config';
@@ -11,7 +20,6 @@ import { closeQueues } from '@rankbase/core/lib/queue';
 import { registerImageGeneration } from '@rankbase/core/services/imageGenerationRegistry';
 import { generateOneImage } from './services/imageGeneration';
 
-// Register this app's image generation implementation
 registerImageGeneration({ generateOneImage });
 
 const server = app.listen(config.PORT, () => {
