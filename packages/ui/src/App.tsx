@@ -32,6 +32,7 @@ const NotFoundPage = lazy(() =>
   import('./pages/NotFound').then((m) => ({ default: m.NotFoundPage }))
 );
 const LoginPage = lazy(() => import('./pages/Login').then((m) => ({ default: m.LoginPage })));
+const AuthCallbackPage = lazy(() => import('./pages/AuthCallback').then((m) => ({ default: m.AuthCallbackPage })));
 
 function RouteFallback() {
   return (
@@ -58,6 +59,7 @@ function Router() {
         <Route path="/images/:id" element={<ImageDetailPage />} />
         <Route path="/tags/:tag" element={<TagDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>

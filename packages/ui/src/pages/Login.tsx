@@ -22,23 +22,29 @@ export function LoginPage() {
     if (!email.trim()) return;
     setSubmitting(true);
     setError(null);
+    // Magic link lands on /auth/callback which then redirects to `from`
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.origin + from },
+      options: { emailRedirectTo: window.location.origin + '/auth/callback' },
     });
     setSubmitting(false);
     if (error) {
       setError(error.message);
     } else {
+      // Store destination so callback page knows where to go
+      sessionStorage.setItem('auth_redirect', from);
       setSent(true);
     }
   };
 
   const handleGoogle = async () => {
     setError(null);
+    // Store destination before leaving the page
+    sessionStorage.setItem('auth_redirect', from);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + from },
+      // Always land on /auth/callback — it reads sessionStorage for the real destination
+      options: { redirectTo: window.location.origin + '/auth/callback' },
     });
     if (error) setError(error.message);
   };
