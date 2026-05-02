@@ -1,9 +1,17 @@
 /**
- * AuthCallback.tsx
+ * AuthCallback.tsx — OAuth/magic link landing page
  *
- * Handles both PKCE (?code=) and implicit (#access_token=) OAuth flows.
- * Explicitly exchanges the code rather than relying on the SDK's auto-detection
- * timing, which can race with React rendering.
+ * Handles two flows Supabase uses when redirecting back to our app:
+ *
+ * 1. PKCE / authorization_code (?code= in URL):
+ *    Supabase sends a short-lived code. We call exchangeCodeForSession(code)
+ *    which hits Supabase's token endpoint and stores the session.
+ *
+ * 2. Implicit (#access_token= in hash):
+ *    Supabase sends tokens directly in the URL hash. We parse them and call
+ *    setSession() because detectSessionInUrl:false means the SDK won't do it.
+ *
+ * After establishing the session we redirect to the stored destination.
  */
 
 import { useEffect, useRef } from 'react';
@@ -23,12 +31,12 @@ export function AuthCallbackPage() {
     async function handle() {
       const url = new URL(window.location.href);
 
-      // PKCE flow: ?code= query param
+      // ── PKCE / authorization_code flow: ?code= ────────────────────────────
       const code = url.searchParams.get('code');
       if (code) {
         const { error } = await supabase.auth.exchangeCodeForSession(code);
         if (error) {
-          console.error('OAuth exchange failed:', error.message);
+          console.error('OAuth code exchange failed:', error.message);
           navigate('/login?error=oauth_failed', { replace: true });
           return;
         }
@@ -37,28 +45,28 @@ export function AuthCallbackPage() {
         return;
       }
 
-      // Implicit flow: #access_token= hash fragment
-      const hash = url.hash;
-      if (hash && hash.includes('access_token')) {
-        // SDK handles hash automatically — just wait for the SIGNED_IN event
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-          if (event === 'SIGNED_IN' && session) {
-            subscription.unsubscribe();
-            sessionStorage.removeItem('auth_redirect');
-            navigate(dest, { replace: true });
+      // ── Implicit flow: #access_token= in hash ────────────────────────────
+      const hash = url.hash.slice(1); // strip leading #
+      if (hash) {
+        const params = new URLSearchParams(hash);
+        const access_token = params.get('access_token');
+        const refresh_token = params.get('refresh_token');
+
+        if (access_token && refresh_token) {
+          // detectSessionInUrl:false means SDK won't auto-parse — do it manually
+          const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+          if (error) {
+            console.error('OAuth setSession failed:', error.message);
+            navigate('/login?error=oauth_failed', { replace: true });
+            return;
           }
-        });
-        // Also check if session already established
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          subscription.unsubscribe();
           sessionStorage.removeItem('auth_redirect');
           navigate(dest, { replace: true });
+          return;
         }
-        return;
       }
 
-      // Already signed in (e.g. magic link already processed)
+      // ── Already signed in (e.g. returning to callback page) ──────────────
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         sessionStorage.removeItem('auth_redirect');
@@ -66,7 +74,7 @@ export function AuthCallbackPage() {
         return;
       }
 
-      // Nothing to handle — back to login
+      // Nothing worked — back to login
       navigate('/login', { replace: true });
     }
 
