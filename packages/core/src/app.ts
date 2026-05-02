@@ -127,7 +127,9 @@ app.set('views', path.join(__dirname, 'views'));
 // Built SPA (Phase 4b) lands in dist/client/. If the directory exists we
 // serve it with aggressive caching. The directory won't exist until the
 // client is built, so we guard the mount.
-const clientDir = path.join(__dirname, '..', 'dist', 'client');
+// __dirname is packages/core/dist — not the app root. Use process.cwd() so that
+// when PM2 runs with cwd=/apps/aega-art, we find dist/client in the right place.
+const clientDir = path.join(process.cwd(), 'dist', 'client');
 const clientIndexPath = path.join(clientDir, 'index.html');
 if (existsSync(clientDir)) {
   app.use(
