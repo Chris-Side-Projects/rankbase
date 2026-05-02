@@ -76,7 +76,7 @@ app.use(
           'https://pub-be62f2d4e647494598a738607675bbd2.r2.dev',
         ],
         'frame-src': ['https://challenges.cloudflare.com'],
-        'connect-src': ["'self'"],
+        'connect-src': ["'self'", 'https://*.supabase.co'],
         'object-src': ["'none'"],
         'base-uri': ["'self'"],
         'form-action': ["'self'"],

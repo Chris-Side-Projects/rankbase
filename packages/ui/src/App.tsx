@@ -34,6 +34,9 @@ const NotFoundPage = lazy(() =>
 const LoginPage = lazy(() => import('./pages/Login').then((m) => ({ default: m.LoginPage })));
 const AuthCallbackPage = lazy(() => import('./pages/AuthCallback').then((m) => ({ default: m.AuthCallbackPage })));
 const AuthRelayPage = lazy(() => import('./pages/AuthRelay').then((m) => ({ default: m.AuthRelayPage })));
+const VoteHistoryPage = lazy(() =>
+  import('./pages/VoteHistory').then((m) => ({ default: m.VoteHistoryPage }))
+);
 
 function RouteFallback() {
   return (
@@ -60,6 +63,7 @@ function Router() {
         <Route path="/images/:id" element={<ImageDetailPage />} />
         <Route path="/tags/:tag" element={<TagDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/history" element={<VoteHistoryPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
         <Route path="/auth/relay" element={<AuthRelayPage />} />
         <Route path="*" element={<NotFoundPage />} />

@@ -67,7 +67,9 @@ export function AuthCallbackPage() {
       }
 
       // ── Already signed in (e.g. returning to callback page) ──────────────
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
         sessionStorage.removeItem('auth_redirect');
         navigate(dest, { replace: true });
@@ -82,7 +84,9 @@ export function AuthCallbackPage() {
   }, [navigate]);
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+    <div
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}
+    >
       <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Signing you in…</p>
     </div>
   );

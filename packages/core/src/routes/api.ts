@@ -23,6 +23,7 @@ import tagsApi from './api/tags';
 import hourlyApi from './hourly';
 import analyticsApi from './analytics';
 import promptVoteApi from './api/promptVote';
+import voteHistoryApi from './api/voteHistory';
 
 import { cronAuth } from '../middleware/cronAuth';
 import { rateLimitRedis } from '../middleware/rateLimitRedis';
@@ -46,6 +47,7 @@ router.use('/prompts', promptVoteApi);
 // Redis-backed rate limit when REDIS_URL is set; in-memory fallback otherwise.
 // Falls back gracefully so tests and local dev don't require Redis running.
 router.use('/vote', rateLimitRedis(30, 60_000), voteApi);
+router.use('/votes', voteHistoryApi);
 router.use('/generate', cronAuth, rateLimitRedis(5, 60_000), generateApi);
 router.use('/aggregate-tags', cronAuth, aggregateTagsApi);
 router.use('/admin', adminApi);

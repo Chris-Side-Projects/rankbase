@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '../context/AuthContext';
-import { platformConfig } from '../platform.config';
 import styles from './Nav.module.css';
 
 export function Nav() {
@@ -18,9 +17,9 @@ export function Nav() {
       <div className={styles.inner}>
         <NavLink to="/compare" className={styles.brand}>
           <span className={styles.logo} aria-hidden="true">
-            {platformConfig.logoLetter}
+            A
           </span>
-          <span>{platformConfig.siteName}</span>
+          <span>aega.art</span>
         </NavLink>
         <nav aria-label="Primary" className={styles.nav}>
           <NavLink
@@ -47,25 +46,31 @@ export function Nav() {
           >
             Providers
           </NavLink>
+          {user && (
+            <NavLink
+              to="/history"
+              className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
+            >
+              My Votes
+            </NavLink>
+          )}
           <ThemeToggle />
-          {platformConfig.requireAuth && (
-            user ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className={styles.authBtn}
-                title={user.email ?? undefined}
-              >
-                Sign out
-              </button>
-            ) : (
-              <NavLink
-                to="/login"
-                className={({ isActive }) => `${styles.authBtn} ${isActive ? styles.active : ''}`}
-              >
-                Sign in
-              </NavLink>
-            )
+          {user ? (
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className={styles.authBtn}
+              title={user.email}
+            >
+              Sign out
+            </button>
+          ) : (
+            <NavLink
+              to="/login"
+              className={({ isActive }) => `${styles.authBtn} ${isActive ? styles.active : ''}`}
+            >
+              Sign in
+            </NavLink>
           )}
         </nav>
       </div>
