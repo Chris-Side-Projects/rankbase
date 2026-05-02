@@ -22,16 +22,19 @@ export function LoginPage() {
     if (!email.trim()) return;
     setSubmitting(true);
     setError(null);
-    // Magic link lands on /auth/callback which then redirects to `from`
-    const { error } = await supabase.auth.signInWithOtp({
+    const redirectTo = window.location.origin + '/auth/callback';
+    console.log('[auth:magic-link] sending OTP to', email.trim());
+    console.log('[auth:magic-link] emailRedirectTo =', redirectTo);
+    const { data, error } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.origin + '/auth/callback' },
+      options: { emailRedirectTo: redirectTo },
     });
+    console.log('[auth:magic-link] result:', { data, error });
     setSubmitting(false);
     if (error) {
+      console.error('[auth:magic-link] ERROR:', error.message, error);
       setError(error.message);
     } else {
-      // Store destination so callback page knows where to go
       sessionStorage.setItem('auth_redirect', from);
       setSent(true);
     }
@@ -39,14 +42,20 @@ export function LoginPage() {
 
   const handleGoogle = async () => {
     setError(null);
-    // Store destination before leaving the page
+    const redirectTo = window.location.origin + '/auth/callback';
+    console.log('[auth:google] initiating OAuth');
+    console.log('[auth:google] redirectTo =', redirectTo);
+    console.log('[auth:google] current origin =', window.location.origin);
     sessionStorage.setItem('auth_redirect', from);
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      // Always land on /auth/callback — it reads sessionStorage for the real destination
-      options: { redirectTo: window.location.origin + '/auth/callback' },
+      options: { redirectTo },
     });
-    if (error) setError(error.message);
+    console.log('[auth:google] result:', { data, error });
+    if (error) {
+      console.error('[auth:google] ERROR:', error.message, error);
+      setError(error.message);
+    }
   };
 
   return (

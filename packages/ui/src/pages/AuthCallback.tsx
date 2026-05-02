@@ -30,13 +30,23 @@ export function AuthCallbackPage() {
 
     async function handle() {
       const url = new URL(window.location.href);
+      console.log('[auth:callback] URL =', url.href);
+      console.log('[auth:callback] search =', url.search);
+      console.log('[auth:callback] hash =', url.hash ? url.hash.slice(0, 80) + '...' : '(empty)');
+      console.log('[auth:callback] dest =', dest);
 
       // ── PKCE / authorization_code flow: ?code= ────────────────────────────
       const code = url.searchParams.get('code');
+      console.log('[auth:callback] code present =', !!code);
       if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        console.log('[auth:callback] exchanging PKCE code for session...');
+        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+        console.log('[auth:callback] exchangeCodeForSession =>', {
+          user: data?.session?.user?.email ?? null,
+          error: error ? error.message : null,
+        });
         if (error) {
-          console.error('OAuth code exchange failed:', error.message);
+          console.error('[auth:callback] PKCE exchange FAILED:', error);
           navigate('/login?error=oauth_failed', { replace: true });
           return;
         }
@@ -51,12 +61,16 @@ export function AuthCallbackPage() {
         const params = new URLSearchParams(hash);
         const access_token = params.get('access_token');
         const refresh_token = params.get('refresh_token');
+        console.log('[auth:callback] implicit: access_token=', !!access_token, 'refresh_token=', !!refresh_token);
 
         if (access_token && refresh_token) {
-          // detectSessionInUrl:false means SDK won't auto-parse — do it manually
-          const { error } = await supabase.auth.setSession({ access_token, refresh_token });
+          const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+          console.log('[auth:callback] setSession =>', {
+            user: data?.session?.user?.email ?? null,
+            error: error ? error.message : null,
+          });
           if (error) {
-            console.error('OAuth setSession failed:', error.message);
+            console.error('[auth:callback] setSession FAILED:', error);
             navigate('/login?error=oauth_failed', { replace: true });
             return;
           }
@@ -67,9 +81,11 @@ export function AuthCallbackPage() {
       }
 
       // ── Already signed in (e.g. returning to callback page) ──────────────
+      console.log('[auth:callback] no code or hash — checking existing session...');
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      console.log('[auth:callback] getSession =>', session?.user?.email ?? 'none');
       if (session) {
         sessionStorage.removeItem('auth_redirect');
         navigate(dest, { replace: true });
@@ -77,6 +93,7 @@ export function AuthCallbackPage() {
       }
 
       // Nothing worked — back to login
+      console.error('[auth:callback] no session established — back to /login');
       navigate('/login', { replace: true });
     }
 
