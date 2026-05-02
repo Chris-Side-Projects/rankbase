@@ -55,6 +55,11 @@ const baseSchema = z.object({
   GOOGLE_API_KEY: z.string().default(''),
   FAL_KEY: z.string().default(''),
   REPLICATE_TOKEN: z.string().default(''),
+  // App-specific providers (civitai, getimg, deepseek) — read via process.env directly
+  CIVITAI_KEY: z.string().default(''),
+  GETIMG_KEY: z.string().default(''),
+  DEEPSEEK_KEY: z.string().default(''),
+  TAGGER_OPENROUTER_KEY: z.string().default(''),
 
   // Supabase (for app-layer DB access)
   SUPABASE_URL: z.string().default(''),
@@ -120,10 +125,11 @@ if (isProduction) {
   }
   // Require at least one image provider
   const hasProvider =
-    raw.STABILITY_KEY || raw.OPENAI_KEY || raw.GOOGLE_API_KEY || raw.FAL_KEY || raw.REPLICATE_TOKEN;
+    raw.STABILITY_KEY || raw.OPENAI_KEY || raw.GOOGLE_API_KEY || raw.FAL_KEY ||
+    raw.REPLICATE_TOKEN || raw.CIVITAI_KEY || raw.GETIMG_KEY;
   if (!hasProvider) {
     throw new Error(
-      'At least one image provider key is required (FAL_KEY, STABILITY_KEY, OPENAI_KEY, REPLICATE_TOKEN, or GOOGLE_API_KEY).'
+      'At least one image provider key is required (CIVITAI_KEY, GETIMG_KEY, FAL_KEY, STABILITY_KEY, OPENAI_KEY, REPLICATE_TOKEN, or GOOGLE_API_KEY).'
     );
   }
   // Cloudflare Images is optional — images can be stored via URL without CF Images

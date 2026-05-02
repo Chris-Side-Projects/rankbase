@@ -7,6 +7,8 @@ const uiRoot = path.resolve(__dirname, '../../../packages/ui/src');
 
 export default defineConfig({
   root: uiRoot,
+  // .env lives in the client/ dir, not in packages/ui/src (the vite root)
+  envDir: path.resolve(__dirname),
   resolve: {
     alias: {
       // Inject this app's platform config at build time
