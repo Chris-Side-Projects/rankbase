@@ -41,6 +41,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const relayedRef = useRef<string | null>(null);
 
   useEffect(() => {
+    // Safety net: if an implicit-flow #access_token= hash landed on this page
+    // (e.g. Supabase redirected to site_url instead of /auth/callback),
+    // parse and apply it immediately before anything else.
+    const hash = window.location.hash.slice(1);
+    if (hash && hash.includes('access_token=')) {
+      const params = new URLSearchParams(hash);
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      if (access_token && refresh_token) {
+        supabase.auth.setSession({ access_token, refresh_token }).then(() => {
+          // Clean the hash from the URL without reloading
+          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+        });
+      }
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
