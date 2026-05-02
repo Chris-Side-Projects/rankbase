@@ -49,8 +49,9 @@ export default defineConfig({
             },
           },
         ],
-        clientsClaim: false,
-        skipWaiting: false,
+        // Force immediate SW takeover on new deployments
+        clientsClaim: true,
+        skipWaiting: true,
       },
     }),
   ],
